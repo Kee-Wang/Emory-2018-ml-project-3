@@ -1,4 +1,4 @@
-# Emory-2018-ml-project-3
+# Emory-2018-ml-project-3 (End April 15, 2018)
 A joint project for ML course
 
 # TO-DO list
