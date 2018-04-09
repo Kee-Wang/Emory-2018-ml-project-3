@@ -33,11 +33,16 @@ Try different structures of the conv-net and compare the performance with each o
 
 *Hint: In this project, you may not need to initialize `tf.summary.FileWriter` by your own since `tf.estimator.Estimator` will automatically help you write the summary you want to record into the event file (See this discussion). You may just add `tf.summary.scalar('loss', loss)` after the loss computed in the original code and then you can view the result in the tensorboard after the training finishes.
 
-To visualize the tensorboard event file on the browser:
+To visualize the tensorboard event file on terminal:
 
-` Tensorboard --logdir path_to_your_model_dir --port=8008`
+`tensorboard --logdir=path/to/log-directory`.
 
-Then type `http://localhost:8008`  in your the browser
+For me, the default path is `tensorboard --logdir=/tmp/tensorflow/mnist/logs/mnist_with_summaries/test/`
+
+which is a directory contains two subdirectories `train` and `test` which will both be read. 
+
+Then enter `localhost:6006` in a browser to visualize. 
+
 
 
 ## Write up report
