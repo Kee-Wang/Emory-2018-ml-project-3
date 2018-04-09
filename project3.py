@@ -1,6 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
+
 #This is to list all INFO
 tf.logging.set_verbosity(tf.logging.INFO)
 
@@ -79,12 +80,17 @@ def cnn_model_fn(features, labels, mode):
 
 
 def main(aa):
+
+
     # Load training and eval data
     mnist = tf.contrib.learn.datasets.load_dataset("mnist")
-    train_data = mnist.train.images[0:100] # Returns np.array
-    train_labels = np.asarray(mnist.train.labels, dtype=np.int32)[0:100]
-    valid_data = mnist.train.images[100:200]  # Returns np.array
-    valid_labels = np.asarray(mnist.train.labels, dtype=np.int32)[100:200]
+
+    p = int(len(mnist.train.images)*0.8) #Probably need to randomize
+    train_data = mnist.train.images[0:p] # Returns np.array
+    train_labels = np.asarray(mnist.train.labels, dtype=np.int32)[0:p]
+    valid_data = mnist.train.images[p:]  # Returns np.array
+    valid_labels = np.asarray(mnist.train.labels, dtype=np.int32)[p:]
+    print('The length',len(train_data))
 
     eval_data = mnist.test.images # Returns np.array
     eval_labels = np.asarray(mnist.test.labels, dtype=np.int32)
@@ -100,7 +106,7 @@ def main(aa):
     train_input_fn = tf.estimator.inputs.numpy_input_fn(
         x={"x": train_data},#First input, convert the numpy array data into a dict structure
         y=train_labels,
-        batch_size=50, #200
+        batch_size=200,
         num_epochs=None,
         shuffle=True)
 
@@ -113,7 +119,7 @@ def main(aa):
         mnist_classifier,
         train_input_fn,
         valid_input_fn,
-        train_steps = 1, #5000
+        train_steps = 5000,
         eval_steps = None,
         train_steps_per_iteration = 500)
     experiment.continuous_train_and_eval()
@@ -137,7 +143,11 @@ def main(aa):
 
 if __name__ == '__main__':
     """Runs whole fitting program automatically"""
+    import time
+
+    start_time = time.time()
     tf.app.run()
+    print("--- %s seconds ---" % (time.time() - start_time))
 
 
 

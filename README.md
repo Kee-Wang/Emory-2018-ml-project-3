@@ -2,6 +2,8 @@
 A joint project for ML course
 
 # TO-DO list
+[] Randomize: Divide training data into 80/20 traning/validation data.
+
 1. Write a full training & evaluation code
 
 2. Tune hyperprameters
