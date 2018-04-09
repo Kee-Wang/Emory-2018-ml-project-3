@@ -29,15 +29,15 @@ Try different structures of the conv-net and compare the performance with each o
    - [ ] adam optimizer
 
 ## Tensorboard:
- Add tensorboard part to your model. Tensorboard is a powerful tool, which helps you monitor how your training process goes on. It is a good way to visualize your model (computation graph you generated with tensorflow) and help you tune a good combination of hyper-parameters. You can even visualize how the weights of your model change with respect to training epochs. Read the tutorial below and watch the great video on this page for more information on adding tensorboard to your code.
+ Add tensorboard part to your model. Tensorboard is a powerful tool, which helps you monitor how your training process goes on. It is a good way to visualize your model (computation graph you generated with tensorflow) and help you tune a good combination of hyper-parameters. You can even visualize how the weights of your model change with respect to training epochs. Read the [tutorial](https://www.tensorflow.org/programmers_guide/summaries_and_tensorboard) and watch the great video on this page for more information on adding tensorboard to your code.
 
-(https://www.tensorflow.org/programmers_guide/summaries_and_tensor board)
-Hint: In this project, you may not need to initialize tf.summary.FileWriter by your own since tf.estimator.Estimator will automatically help you write the summary you want to record into the event file (See this discussion). You may just add tf.summary.scalar('loss', loss) after the loss computed in the original code and then you can view the result in the tensorboard after the training finishes.
+*Hint: In this project, you may not need to initialize `tf.summary.FileWriter` by your own since `tf.estimator.Estimator` will automatically help you write the summary you want to record into the event file (See this discussion). You may just add `tf.summary.scalar('loss', loss)` after the loss computed in the original code and then you can view the result in the tensorboard after the training finishes.
+
 To visualize the tensorboard event file on the browser:
 
 ` Tensorboard --logdir path_to_your_model_dir --port=8008`
 
- Then type `http://localhost:8008`  in your the browser
+Then type `http://localhost:8008`  in your the browser
 
 
 ## Write up report
