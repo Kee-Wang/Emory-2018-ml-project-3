@@ -63,6 +63,6 @@ for i in range(2000):
         [train_accuracy] = sess.run([accuracy], feed_dict={x: batch[0], y: batch[1]})
         print("step %d, training accuracy %g"%(i,train_accuracy))
 
-    sess.run(train_step, feed_dict={x: batch[0], y_true: batch[1]})
+    sess.run(train_step, feed_dict={x: batch[0], y: batch[1]})
 
 
