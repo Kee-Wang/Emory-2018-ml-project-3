@@ -17,18 +17,17 @@ Try different structures of the conv-net and compare the performance with each o
    
          `for learning_rate in [1E-3, 1E-4, 1E-5]:`
          
-   - [ ]  size of the filters
-      
-         `for use_two_fc in [True, False]:
-            for use_two_conv in [True, False]:`
-   
+   - [ ] size of the filters       
    - [ ] number of filters
    - [ ] number of conv layers
+   
+         `for use_two_conv in [True, False]:`
+   
    - [ ] number of pooling layers
-   - [ ]  the ways of paddings
+   - [ ] the ways of paddings
    - [ ] the choices of activation functions
    
-   Construct a hyperparameter string for each one (example: "lr_1E-3,fc=2,conv=2)
+   Construct a hyperparameter string for each one (example: "lr_1E-3,fc=2,conv=2")
    
       `hparam_str = make_hpram_string(learning_rate, use_two_fc, use_two_conv)
        writer = tf.summary.FileWrite("/tmp/mnist_tutorial/" + hpram_str)`
