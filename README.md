@@ -14,12 +14,28 @@ A too large batch_size will increase the computation load for every backpropogat
 Try different structures of the conv-net and compare the performance with each other. The components you can modify but not limited to are: 
 
    - [ ] initial learning rate
+   
+         `for learning_rate in [1E-3, 1E-4, 1E-5]:`
+         
    - [ ]  size of the filters
+      
+         `for use_two_fc in [True, False]:
+            for use_two_conv in [True, False]:`
+   
    - [ ] number of filters
    - [ ] number of conv layers
    - [ ] number of pooling layers
    - [ ]  the ways of paddings
    - [ ] the choices of activation functions
+   
+   Construct a hyperparameter string for each one (example: "lr_1E-3,fc=2,conv=2)
+   
+      `hparam_str = make_hpram_string(learning_rate, use_two_fc, use_two_conv)
+       writer = tf.summary.FileWrite("/tmp/mnist_tutorial/" + hpram_str)`
+       
+ Then run with the new settings
+      `mnist(learnig_rate, use_two_fully_connected_layers, use_two_conv_layers, writer)`
+     
 
 ### built-in optimizers
 
