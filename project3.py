@@ -16,7 +16,6 @@ def cnn_model_fn(features, labels, mode):
 
   # It is a function that used to train data.
 
-  print('This is labels: ',labels)
   # Input Layer
   input_layer = tf.reshape(features["x"], [-1, 28, 28, 1])
 
@@ -48,7 +47,7 @@ def cnn_model_fn(features, labels, mode):
 
   # Logits Layer
   logits = tf.layers.dense(inputs=dropout, units=10)
-  print('The logit is',logits)
+
 
 
   predictions = {
@@ -86,11 +85,13 @@ def main(aa):
     mnist = tf.contrib.learn.datasets.load_dataset("mnist")
 
     p = int(len(mnist.train.images)*0.8) #Probably need to randomize
+
     train_data = mnist.train.images[0:p] # Returns np.array
     train_labels = np.asarray(mnist.train.labels, dtype=np.int32)[0:p]
+
     valid_data = mnist.train.images[p:]  # Returns np.array
     valid_labels = np.asarray(mnist.train.labels, dtype=np.int32)[p:]
-    print('The length',len(train_data))
+
 
     eval_data = mnist.test.images # Returns np.array
     eval_labels = np.asarray(mnist.test.labels, dtype=np.int32)
@@ -122,7 +123,9 @@ def main(aa):
         train_steps = 5000,
         eval_steps = None,
         train_steps_per_iteration = 500)
-    experiment.continuous_train_and_eval()
+
+
+    #experiment.continuous_train_and_eval()
 
     #The rest come from tutorial
     # mnist_classifier.train(

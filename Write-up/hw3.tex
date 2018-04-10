@@ -1,0 +1,336 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\marginparwidth 0pt
+\oddsidemargin  0pt
+\evensidemargin  0pt
+\marginparsep 0pt
+\usepackage{amsmath}
+\topmargin 0pt
+\usepackage{mathtools}
+\textwidth   6.5 in
+ \textheight  8 in
+\usepackage{fancyhdr}
+\renewcommand{\headrulewidth}{2pt}
+\renewcommand{\footrulewidth}{1pt}
+ 
+\pagestyle{fancy}
+\usepackage{amsmath}
+ %%%%%%% %%%%%%% %%%%%%% %%%%%%% %%%%%%% %%%%%%%For python%%%
+ % Default fixed font does not support bold face
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+% Custom colors
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.5}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\usepackage{listings}
+
+% Python style for highlighting
+\newcommand\pythonstyle{\lstset{
+language=Python,
+breaklines=true,
+basicstyle=\ttm,
+otherkeywords={self},             % Add keywords here
+keywordstyle=\ttb\color{deepblue},
+emph={MyClass,__init__},          % Custom highlighting
+emphstyle=\ttb\color{deepred},    % Custom highlighting style
+stringstyle=\color{deepgreen},
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+}}
+
+%++++++Hyperlink
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+
+% Python environment
+\lstnewenvironment{python}[1][]
+{
+\pythonstyle
+\lstset{#1}
+}
+{}
+
+% Python for external files
+\newcommand\pythonexternal[2][]{{
+\pythonstyle
+\lstinputlisting[#1]{#2}}}
+
+% Python for inline
+\newcommand\pythoninline[1]{{\pythonstyle\lstinline!#1!}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% %%%%%%% %%%%%%% %%%%%%%
+
+
+%\pagestyle{empty}
+
+\begin{document}
+
+
+\begin{center}
+  {\bf
+  CS 534 Machine Learning  }
+
+\vspace{12pt}
+
+  Project 3, due Monday, April 16
+  \\
+  Chenxi Cai \\
+  Yifei Ren \\
+  Qingfeng (Kee) Wang
+ 
+\end{center}
+
+\vspace{12pt}
+
+
+
+
+\clearpage
+(Notice, all links (table of contents, figures references, table references etc.) are clickable! You can download this PDF and open it using Preview or Adobe Reader to enable this convenient feature.)
+ 
+\tableofcontents{}
+
+\clearpage
+\section{Perceptron Implementation}
+
+\subsection{Analysis}
+For perception, the prediction is: $g(x) = \sum w_ix_i$ (in which $x_i$ contains the bais term!) and predicts 1 if $g(x) \ge 0$, or -1 if $g(x) < 0$. So in order to predict result, we need to train weights first. Weight for each feature is trained row by row. If misclassified, weights will be updated which is: 
+\[
+\begin{bmatrix}
+w_1 \\
+w_2 \\
+bias  
+\end{bmatrix}_{i+1}
+=
+\begin{bmatrix}
+w_1 \\
+w_2 \\
+bias  
+\end{bmatrix}_{i}
++  learning\_rate * y_i * 
+\begin{bmatrix}
+x_1 \\
+x_2 \\
+1  
+\end{bmatrix}_i
+\]
+
+
+where $learning_rate = 1$ is given, $\bf{w}$ is the weight array of size (nfeature + 1), $y_i$ is a scalar of data {\tt y[i]}, {\bf x} is a array of size (nfeature + 1). Obviously this is going to be an iterative method. 
+
+Initial setup: initial bias are 1, initial weights are 1.
+
+
+\subsection{Result and Discussion}
+Finial weights are $[3.15, 3.17]$ for feature $x_1$ and $x_2$. Final bias is -3. The prediction result is shown in Figure. \ref{fig:q1}.
+
+Interestingly, it is possible to reduce the testing error rate to 0 by setting initial bias to other values other than 1, for example, 10 or -1. Probably that is because they converge at a different local optimal value.
+
+\clearpage
+
+\section{Adaboost Implementation}
+
+\subsection{Analysis}
+The final prediction is $G(x)= sign[\sum_{m=1}^M \alpha_m G_m(x) ]$, where M is the number of iterations (weak classifiers), and each iteration corresponds to a classifier $G_m(x)$ with a weight $\alpha_m$. 
+
+
+For each classifier, $\alpha$ can be obtained simply from 
+$$\alpha = \log(\frac{1-err_m}{err_m})$$
+
+ (Not sure about the base of log, I use $e$), where $$err_m = \frac{\sum_{i=1}^N w_i I(y_i\neq G_m(x_i))}{\sum_{i=1}^{N}w_i},$$ and where $N$ is the number of points (samples).
+ 
+ $I(y_i\neq G_m(x_i))$ is a function for $m$-th classifier. It is a 1D array with length number of points. For each entry, it equals to 1 if $G_m$ classifier predicts point wrong or 0 if predicts correctly (Not sure about this one, need check with TA). So, the higher success rate, the higher weight $\alpha$ which makes perfect sense. 
+ 
+ 
+Here $w_i$ is the weight that initialized as $w_i = \frac{1}{N},$ for each point, and updates as $$w_i = w_ie^{\alpha_mI(y_i\neq G_m(x_i))},$$ or explicitly:
+
+\[
+\begin{bmatrix}
+w_1 \\
+w_2 \\
+\vdots \\
+w_N  
+\end{bmatrix}_{i+1}
+=
+\begin{bmatrix}
+w_1 e^{\alpha_mI(y_i\neq G_m(x_1))} \\
+w_2 e^{\alpha_mI(y_i\neq G_m(x_2))} \\
+\vdots \\
+w_N e^{\alpha_mI(y_i\neq G_m(x_N))}
+\end{bmatrix}_{i+1}
+\]
+
+
+
+so the weight of the point $i$ $w_i$ does not change if predicts correctly (since  $w_ie^{\alpha_mI(y_i\neq G_m(x_1))} = w_ie^0 = w_i$) and will update otherwise (since  $w_ie^{\alpha_mI(y_i\neq G_m(x_1))} = w_ie^{\alpha_m}$).
+
+Finally, $G_m(x)$ is a cutoff on one of the axes x=xi or y = yi, depending on if the cutoff gives the lowest error rate.
+
+\subsection{Results and discussion}
+
+Error rate with different iterations are listed in Table. \ref{tab:q2}.  A more detailed study is shown in plot Figure. \ref{fig:q2_err}, which can be seen that the error rate goes down as the number of iteration goes up. However the error rate oscillates. 
+
+
+The error rate finally converges at error rate 10.0\%. Also, the boundaries are shown in Figure. \ref{fig:q2_G3}  to Figure. \ref{fig:q2_G20} . It is speculated that the error rate should have been a little bit lower, but I don't have time to debug due to the short of time. Moreover, the boundary already seems to be reasonable. 
+
+
+
+\begin{table}[!htb]
+\centering
+\caption{For problem 2, Adaboost.}
+\label{tab:q2}
+\begin{tabular}{lllll}
+\hline \hline
+
+Iteration	&3	&5	&10		&20 \\ \hline
+
+Error rate(\%)  &16.67	&10.0	&10.0		&13.3	\\ \hline \hline
+
+\end{tabular}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+\clearpage
+\section{SVM with different kernels}
+Plots and error rate information for SVM with different kernels are shown in the Figure \ref{fig:q3_rbf}, Figure \ref{fig:q3_sigmoid} and Figure \ref{fig:q3_poly}. 
+
+It should be noted that the result could be different for each run.
+
+
+
+\clearpage
+\section{Random Forest}
+%%%%Q4: random forest
+
+For random forest, result is shown in Figure: \ref{fig:q4}. Feature importance are ranked in Table. \ref{tab:q4}. Notice, results could be difference from each run.
+
+\begin{table}[!htb]
+\centering
+\caption{Ranking the features according to importance. The ranking and feature number begins with 0.}
+\label{tab:q4}
+\begin{tabular}{lll}
+\hline \hline
+Ranking	&Feature Number	&Importance 	\\ \hline
+0 &  9  &0.12 \\
+1 &  4  &0.12 \\
+2 & 14  &0.09 \\
+3 & 10  &0.04 \\
+4 &  0  &0.04 \\
+5 & 11  &0.04 \\
+6 &  2  &0.04 \\
+7 &  5  &0.04 \\
+8 & 12  &0.04 \\
+9 &  8  &0.04 \\
+10 &  7  &0.04 \\
+11 &  6  &0.04 \\
+12 &  3  &0.04 \\
+13 &  1  &0.04 \\
+14 & 16  &0.04 \\
+15 & 13  &0.04 \\
+16 & 15  &0.04 \\
+17 & 17  &0.04 \\
+18 & 19  &0.04 \\
+19 & 18  &0.03 \\
+\hline \hline
+\end{tabular}
+\end{table}
+
+
+
+\clearpage
+\section{Gradient Boosting}
+%%%Q5: Gradient boosting.
+Error rate for gradient boosting is: 19.33\% (and in some runs it become 19.67\%!). The ranking of features is presented in Table. \ref{tab:q5}.
+
+
+\begin{table}[!htb]
+\centering
+\caption{Ranking the features according to importance for gradient boosting. The ranking and feature number begins with 0.}
+\label{tab:q5}
+\begin{tabular}{lll}
+\hline \hline
+Ranking	&Feature Number	&Importance 	\\ \hline
+0 &  9  &0.25 \\
+1 &  4  &0.24 \\
+2 & 14  &0.21 \\
+3 &  1  &0.03 \\
+4 & 10  &0.03 \\
+5 &  3  &0.02 \\
+6 &  7  &0.02 \\
+7 &  6  &0.02 \\
+8 &  2  &0.02 \\
+9 & 18  &0.02 \\
+10 &  5  &0.02 \\
+11 &  0  &0.02 \\
+12 &  8  &0.02 \\
+13 & 17  &0.01 \\
+14 & 13  &0.01 \\
+15 & 11  &0.01 \\
+16 & 19  &0.01 \\
+17 & 16  &0.01 \\
+18 & 15  &0.01 \\
+19 & 12  &0.00 \\
+\hline \hline
+\end{tabular}
+\end{table}
+
+
+
+\clearpage
+\section{MARS}
+For MARS, testing error rate is 21.14\%.
+
+
+
+\clearpage
+\section{Source codes}
+
+\subsection{Comments}
+Finally, codes are enclosed here. It is good to remind the grader that some of the defined functions are not used in the run (especially in Q2).
+
+\subsection{Q1: Implementing Perceptron}
+For question 1:
+\pythonexternal{./../project3.py}
+
+
+
+
+\vspace{24pt}
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
