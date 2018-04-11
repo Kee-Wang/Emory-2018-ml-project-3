@@ -60,6 +60,8 @@ with tf.name_scope('cross_entropy'):
 # Use an AdamOptimizer to train the network
 with tf.name_scope('train'):
   train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+  #train_step = tf.train.otheropimizer(1e-4).minimize(cross_entropy)
+
 
 # Compute the accuracy
 with tf.name_scope('accuracy'):

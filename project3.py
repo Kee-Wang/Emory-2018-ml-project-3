@@ -25,10 +25,10 @@ def cnn_model_fn(features, labels, mode):
       filters=32,
       kernel_size=[5, 5],
       padding="same",
-      activation=tf.nn.relu)
+      activation=tf.nn.relu, name='conv1')
 
   # Pooling Layer #1
-  pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2)
+  pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2, name = 'pool1')
 
   # Convolutional Layer #2 and Pooling Layer #2
   conv2 = tf.layers.conv2d(
@@ -36,8 +36,9 @@ def cnn_model_fn(features, labels, mode):
       filters=64,
       kernel_size=[5, 5],
       padding="same",
-      activation=tf.nn.relu)
-  pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2)
+      activation=tf.nn.relu, name = 'conv2')
+
+  pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2, name='pool2')
 
   # Dense Layer
   pool2_flat = tf.reshape(pool2, [-1, 7 * 7 * 64])
@@ -63,6 +64,7 @@ def cnn_model_fn(features, labels, mode):
 
   # Calculate Loss (for both TRAIN and EVAL modes)
   loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
+  tf.summary.scalar('loss', loss)
 
 
   # Configure the Training Op (for TRAIN mode)
@@ -98,50 +100,59 @@ def main(aa):
 
 
     # Create the Estimator
-    mnist_classifier = tf.estimator.Estimator(model_fn=cnn_model_fn, model_dir="/tmp/mnist_convnet_model")
+    mnist_classifier = tf.estimator.Estimator(model_fn=cnn_model_fn, model_dir="../../tensorboard/project3/pj3-1")
     # Set up logging for predictions
     tensors_to_log = {"probabilities": "softmax_tensor"}
     logging_hook = tf.train.LoggingTensorHook(tensors=tensors_to_log, every_n_iter=1)
+
+    # # Merge all summaries
+    # merged_summary = tf.summary.merge_all()
+    # writer = tf.summary.FileWriter("../../tensorboard/project3/pj3-1")
+    # writer.add_graph(sess.graph)
+
 
     # Train the model
     train_input_fn = tf.estimator.inputs.numpy_input_fn(
         x={"x": train_data},#First input, convert the numpy array data into a dict structure
         y=train_labels,
         batch_size=200,
-        num_epochs=None,
+        num_epochs=None, #Will run forever
         shuffle=True)
 
     valid_input_fn = tf.estimator.inputs.numpy_input_fn(
         x={"x": valid_data},
         y=valid_labels,
         num_epochs=1,
-        shuffle=False)
+        shuffle=False) # Boolean, if True shuffles the queue. Avoid shuffle at prediction time.
+
     experiment = tf.contrib.learn.Experiment(
         mnist_classifier,
         train_input_fn,
         valid_input_fn,
-        train_steps = 5000,
+        train_steps = 5000, #This is the step for gradient?
         eval_steps = None,
-        train_steps_per_iteration = 500)
+        train_steps_per_iteration = 500) #Every this step, save to ckpt, and evaluate accuracy
 
 
-    #experiment.continuous_train_and_eval()
+    experiment.continuous_train_and_eval()
 
     #The rest come from tutorial
     # mnist_classifier.train(
     #     input_fn=train_input_fn,
     #     steps=1,
     #     hooks=[logging_hook])
-    #
-    #
-    # # Evaluate the model and print results
-    # eval_input_fn = tf.estimator.inputs.numpy_input_fn(
-    #     x={"x": eval_data},
-    #     y=eval_labels,
-    #     num_epochs=1,
-    #     shuffle=False)
-    # eval_results = mnist_classifier.evaluate(input_fn=eval_input_fn)
-    # print(eval_results)
+
+
+    # Evaluate the model and print results
+    eval_input_fn = tf.estimator.inputs.numpy_input_fn(
+        x={"x": eval_data},
+        y=eval_labels,
+        num_epochs=1,
+        shuffle=False)
+    eval_results = mnist_classifier.evaluate(input_fn=eval_input_fn)
+    print(eval_results)
+
+
 
 
 if __name__ == '__main__':
