@@ -2,8 +2,22 @@ import tensorflow as tf
 import numpy as np
 
 
+# Parameters
+# Default: list all the default variables that need to tune
+
+
+# Adjust: put the parameter that need to be adjusted
+learning_rate = 1E-3
+
+# Save dir:
+save_dir = 'tensorboard/learning_rate/lr=1E-3'
+
+
+
+
 #This is to list all INFO
 tf.logging.set_verbosity(tf.logging.INFO)
+
 
 def cnn_model_fn(features, labels, mode):
   """Model function for CNN. This function is used to be called later in main function.
@@ -64,12 +78,12 @@ def cnn_model_fn(features, labels, mode):
 
   # Calculate Loss (for both TRAIN and EVAL modes)
   loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=logits)
-  tf.summary.scalar('loss', loss)
+  tf.summary.scalar('loss', loss) #Write the loss into tensorboard
 
 
   # Configure the Training Op (for TRAIN mode)
   if mode == tf.estimator.ModeKeys.TRAIN:
-    optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)#potimized and learning rate can change
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)#potimized and learning rate can change
     train_op = optimizer.minimize(
         loss=loss,
         global_step=tf.train.get_global_step())
@@ -85,23 +99,24 @@ def main(aa):
     mnist = tf.contrib.learn.datasets.load_dataset("mnist")
 
     p = int(len(mnist.train.images)*0.8) #Probably need to randomize
+    with tf.name_scope('train_data'):
+        train_data = mnist.train.images[0:p] # Returns np.array
+        train_labels = np.asarray(mnist.train.labels, dtype=np.int32)[0:p]
 
-    train_data = mnist.train.images[0:p] # Returns np.array
-    train_labels = np.asarray(mnist.train.labels, dtype=np.int32)[0:p]
+    with tf.name_scope('valid_data'):
+        valid_data = mnist.train.images[p:]  # Returns np.array
+        valid_labels = np.asarray(mnist.train.labels, dtype=np.int32)[p:]
 
-    valid_data = mnist.train.images[p:]  # Returns np.array
-    valid_labels = np.asarray(mnist.train.labels, dtype=np.int32)[p:]
-
-
-    eval_data = mnist.test.images # Returns np.array
-    eval_labels = np.asarray(mnist.test.labels, dtype=np.int32)
+    with tf.name_scope('test_data'):
+        eval_data = mnist.test.images # Returns np.array
+        eval_labels = np.asarray(mnist.test.labels, dtype=np.int32)
 
 
     # Create the Estimator
-    mnist_classifier = tf.estimator.Estimator(model_fn=cnn_model_fn, model_dir="tensorboard/project3/pj3-1")
+    mnist_classifier = tf.estimator.Estimator(model_fn=cnn_model_fn, model_dir=save_dir)
     # Set up logging for predictions
     tensors_to_log = {"probabilities": "softmax_tensor"}
-    logging_hook = tf.train.LoggingTensorHook(tensors=tensors_to_log, every_n_iter=1)
+    logging_hook = tf.train.LoggingTensorHook(tensors=tensors_to_log, every_n_iter=50)
 
     # # Merge all summaries
     # merged_summary = tf.summary.merge_all()
@@ -130,9 +145,8 @@ def main(aa):
         train_steps = 5000, #This is the step for gradient?
         eval_steps = None,
         train_steps_per_iteration = 500) #Every this step, save to ckpt, and evaluate accuracy
-
-
     experiment.continuous_train_and_eval()
+    # The result of this step is a trained mnist_classifer
 
     #The rest come from tutorial
     # mnist_classifier.train(
@@ -147,6 +161,7 @@ def main(aa):
         y=eval_labels,
         num_epochs=1,
         shuffle=False)
+
     eval_results = mnist_classifier.evaluate(input_fn=eval_input_fn)
     print(eval_results)
 
