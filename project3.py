@@ -81,8 +81,6 @@ def cnn_model_fn(features, labels, mode):
 
 
 def main(aa):
-
-
     # Load training and eval data
     mnist = tf.contrib.learn.datasets.load_dataset("mnist")
 
@@ -100,7 +98,7 @@ def main(aa):
 
 
     # Create the Estimator
-    mnist_classifier = tf.estimator.Estimator(model_fn=cnn_model_fn, model_dir="../../tensorboard/project3/pj3-1")
+    mnist_classifier = tf.estimator.Estimator(model_fn=cnn_model_fn, model_dir="tensorboard/project3/pj3-1")
     # Set up logging for predictions
     tensors_to_log = {"probabilities": "softmax_tensor"}
     logging_hook = tf.train.LoggingTensorHook(tensors=tensors_to_log, every_n_iter=1)
@@ -115,7 +113,7 @@ def main(aa):
     train_input_fn = tf.estimator.inputs.numpy_input_fn(
         x={"x": train_data},#First input, convert the numpy array data into a dict structure
         y=train_labels,
-        batch_size=200,
+        batch_size= 200,
         num_epochs=None, #Will run forever
         shuffle=True)
 
