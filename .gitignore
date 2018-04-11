@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 MNIST-data/
+MNIST_data/
 env/
 build/
 develop-eggs/
