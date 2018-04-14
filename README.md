@@ -13,12 +13,19 @@ A too large batch_size will increase the computation load for every backpropogat
 
 Try different structures of the conv-net and compare the performance with each other. The components you can modify but not limited to are: 
 
-   - [ ] initial learning rate
+   - [x] initial learning rate
    
          `for learning_rate in [1E-3, 1E-4, 1E-5]:`
          
-   - [ ] size of the filters       
+         ~use 1E-1~
+         
+         
+   - [x] size of the filters
+   
+         ~Filter number:5*5~
+   
    - [ ] number of filters
+   
    - [ ] number of conv layers
    
          `for use_two_conv in [True, False]:`
