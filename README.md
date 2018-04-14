@@ -17,12 +17,12 @@ Try different structures of the conv-net and compare the performance with each o
    
          `for learning_rate in [1E-3, 1E-4, 1E-5]:`
          
-         ~use 1E-1~
+         *use 1E-1*
          
          
    - [x] size of the filters
    
-         ~Filter number:5*5~
+         *Filter number:5x5 *
    
    - [ ] number of filters
    
