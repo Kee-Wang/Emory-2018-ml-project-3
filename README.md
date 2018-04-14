@@ -35,7 +35,7 @@ Try different structures of the conv-net and compare the performance with each o
    
    - [ ] number of pooling layers
    
-   3
+   2
    
    
    - [ ] the ways of paddings
