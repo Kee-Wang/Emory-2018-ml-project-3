@@ -1,3 +1,7 @@
-\contentsline {section}{\numberline {1}This is first section}{3}{section.1}
-\contentsline {subsection}{\numberline {1.1}This is a subsection section.}{3}{subsection.1.1}
-\contentsline {section}{\numberline {2}Source codes}{4}{section.2}
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {section}{\numberline {2}Adjust hyper-parameters I}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}Size of the filters}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Number of filters}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Number of convolution and pooling layers}{4}{subsection.2.3}
+\contentsline {section}{\numberline {3}Finally model and summary}{6}{section.3}
+\contentsline {section}{\numberline {4}Source codes}{7}{section.4}
