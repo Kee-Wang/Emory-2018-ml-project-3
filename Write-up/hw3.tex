@@ -126,7 +126,7 @@ A more detailed discussion of finally chosen model is provided in the section \r
 
 \section{Adjust hyper-parameters: stage I}
 \label{stage1}
-In this section we first adjust several hyper-parameters listed in the requirement 2.
+In this section we first adjust several hyper-parameters listed in the requirement 2. Hyper-parameters are determined by the validation accuracy (or loss) and the time efficiency
 
 
 \subsection{Size of the filters}
@@ -237,7 +237,7 @@ There are several choices of learning rate from {\tt 1E-5, 1E-4, 1E-3, 1E-2, 1E-
 \begin{figure}[!htb]
    \centering
    \includegraphics[width=10cm]{images/learning_rate.png} % requires the graphicx package
-   \caption{Loss function of validation data. The detailed assignment of curves is shown in the event file and can be viewed in Tensorboard. The curve that descent the fastest correspond to learning rate equals to {\tt 1E-1}.}
+   \caption{Loss function of training data. The detailed assignment of curves is shown in the event file and can be viewed in Tensorboard. The curve that descent the fastest correspond to learning rate equals to {\tt 1E-1}.}
    \label{fig:lr}
 \end{figure}
 
@@ -259,19 +259,6 @@ So far there are two types of padding methods, i.e., {\tt same} (base model) and
 \label{stage2}
 In this chapter, we use the hyper-parameters optimzied in section \ref{stage1} and adjust the optimizer. There are three choices of optimizers: {\tt Gradient Descent} (base model), {\tt Adam Optimizer} and {\tt Momentum Optimizer}. We will explain more about later two optimizers.
 
-\subsection{Momentum optimizer}
-Steepest gradient descent (SGD) has trouble navigating ravines, i.e. areas where the surface curves much more steeply in one dimension than in another, which are common around local optima. Momentum is a method that helps accelerate SGD in the relevant direction and dampens oscillations. 
-
-Here we set the parameters of MomentumOptimizer as: 
-
-\begin{lstlisting}
-optimizer = tf.train.MomentumOptimizer(learning_rate=1E-1, momentum=0.9)
-\end{lstlisting}
-
-
-The plot of training loss is showed as Figure
-(plot)
-We can then get the convergence rate = 
 
 
 \subsection{Adam optimizer}
@@ -283,24 +270,45 @@ optimizer = tf.train.AdamOptimizer(learning_rate=1E-1)
 \end{lstlisting}
 
 
-The plot of training loss is showed as Figure
-(plot)
-We can then get the convergence rate = 
+The plot of training loss is showed as Figure \ref{fig:adam}. Obviously the loss function is very high does not decrease at all.  As a matter of fact the accuracy rate is around 10\%.
 
 
-The training loss plot of SGD is showed as Figure 
-(plot)
-We can then get the convergence rate = 
-
-Compare these three convergence rates, we have the conclusion that, xxx optimizer suits best for these model.
-
-
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=10cm]{images/optimizer-adam.png} % requires the graphicx package
+   \caption{Loss function of training data using Adam optimizer.}
+   \label{fig:adam}
+\end{figure}
 
 
 
-Results are compared in...
-(Needs table or figure)
+\subsection{Momentum optimizer and SGD}
+Steepest gradient descent (SGD) has trouble navigating ravines, i.e. areas where the surface curves much more steeply in one dimension than in another, which are common around local optima. Momentum is a method that helps accelerate SGD in the relevant direction and dampens oscillations. 
 
+Here we set the parameters of MomentumOptimizer as: 
+
+\begin{lstlisting}
+optimizer = tf.train.MomentumOptimizer(learning_rate=1E-1, momentum=0.9)
+\end{lstlisting}
+
+The momentum is usually set to be 0.9.
+
+The plot of training loss is showed as Figure \ref{fig:momentum-loss}. It seems both optimizers gives good result and oscillate starting at 2500 steps. In addition, the validation accuracy also shows the similar trend in Figure \ref{fig:momentum-accuracy}. Since the at the final step (5000 step) Momentum Optimizer has better accuracy (0.9891) then SGD (0.9881) and  Momentum Optimizer takes about 20\% less time to finish 5000 steps, it is reasonable to set Momentum Optimizer as our final optimizer.
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=10cm]{images/optimizer-loss.png} % requires the graphicx package
+   \caption{Loss function of training data using Momentum Optimizer (grey) and SGD (orange).}
+   \label{fig:momentum-loss}
+\end{figure}
+
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=10cm]{images/optimizer-accuracy.png} % requires the graphicx package
+   \caption{Accuracy of validation data using Momentum Optimizer (orange) and SGD (blue).}
+   \label{fig:momentum-accuracy}
+\end{figure}
 
 \clearpage
 
@@ -309,18 +317,18 @@ Results are compared in...
 
 Based on previous experiments, the final model contins the following hyper-parameters:
 
-\begin{enumerate}
+\begin{itemize}
 \item
-{\tt learning\_rate = 1E-5} 
+learning rate: {\tt 1E-1} 
 
 \item
 Size of filter:  $5\times5$
 
 \item
-Number of filters: 32 for first layer and 64 for second layer
+Number of filters: 32 for first convolutional layer and 64 for second convolutional layer
 
 \item
-Number of convolutional and pooling layers: 2
+Number of convolutional and pooling layers: 2 and 2. The structure of the whole model is shown in Figure \ref{fig:2-c-2-p}.
 
 \item
 The ways of paddings: {\tt same}
@@ -329,13 +337,27 @@ The ways of paddings: {\tt same}
 The choice of activation function: {\tt ReLu}
 
 \item
-Optimizer: {\tt Gradient Descent}
+Optimizer: {\tt Momentum Optimizer}
+\end{itemize}
+The source code containing these parameters is listed at the end of report. The loss of training process is presented in Figure \ref{fig:best-loss}. It shows the loss decrease dramatically at initial 100 steps and then tend to oscillate around a very low loss. Meanwhile, Figure \ref{fig:best-accuracy} shows the accuracy of validation data throughout the training process and it clearly shows the model accuracy increases and converge fast to a very hight value. The finally validation accuracy at step 5000 is 0.9891. With this model, the final testing accuracy is a very satisfactory which is 0.9910.
 
-(Needs data and analysis of final model).
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=10cm]{images/best_loss.png} % requires the graphicx package
+   \caption{Loss of training.}
+   \label{fig:best-loss}
+\end{figure}
 
 
 
-\end{enumerate}
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=10cm]{images/best_accuracy.png} % requires the graphicx package
+   \caption{Accuracy of validation data (blue curve) and the final testing data (red dot).}
+   \label{fig:best-accuracy}
+\end{figure}
 
 
 
@@ -345,9 +367,9 @@ Optimizer: {\tt Gradient Descent}
 \clearpage
 \section{Source codes}
 
-Finally, codes are enclosed here.
+Here we only present the source code that gives the best result.
 
-\pythonexternal{./../base_model.py}
+\pythonexternal{./../best_model.py}
 
 
 

@@ -7,7 +7,7 @@
 \contentsline {subsection}{\numberline {2.5}The ways of paddings}{7}{subsection.2.5}
 \contentsline {subsection}{\numberline {2.6}The choices of activation functions}{7}{subsection.2.6}
 \contentsline {section}{\numberline {3}Adjust hyper-parameters: stage II}{8}{section.3}
-\contentsline {subsection}{\numberline {3.1}Momentum optimizer}{8}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Adam optimizer}{8}{subsection.3.2}
-\contentsline {section}{\numberline {4}Final model and analysis}{9}{section.4}
-\contentsline {section}{\numberline {5}Source codes}{10}{section.5}
+\contentsline {subsection}{\numberline {3.1}Adam optimizer}{8}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Momentum optimizer and SGD}{8}{subsection.3.2}
+\contentsline {section}{\numberline {4}Final model and analysis}{10}{section.4}
+\contentsline {section}{\numberline {5}Source codes}{12}{section.5}
