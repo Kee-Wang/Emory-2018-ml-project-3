@@ -4,10 +4,10 @@
 \contentsline {subsection}{\numberline {2.2}Number of filters}{4}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}Number of convolution and pooling layers}{5}{subsection.2.3}
 \contentsline {subsection}{\numberline {2.4}Learning rate}{7}{subsection.2.4}
-\contentsline {subsection}{\numberline {2.5}The ways of paddings}{7}{subsection.2.5}
-\contentsline {subsection}{\numberline {2.6}The choices of activation functions}{7}{subsection.2.6}
-\contentsline {section}{\numberline {3}Adjust hyper-parameters: stage II}{8}{section.3}
-\contentsline {subsection}{\numberline {3.1}Adam optimizer}{8}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Momentum optimizer and SGD}{8}{subsection.3.2}
-\contentsline {section}{\numberline {4}Final model and analysis}{10}{section.4}
-\contentsline {section}{\numberline {5}Source codes}{12}{section.5}
+\contentsline {subsection}{\numberline {2.5}The ways of paddings}{8}{subsection.2.5}
+\contentsline {subsection}{\numberline {2.6}The choices of activation functions}{9}{subsection.2.6}
+\contentsline {section}{\numberline {3}Adjust hyper-parameters: stage II}{10}{section.3}
+\contentsline {subsection}{\numberline {3.1}Adam optimizer}{10}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Momentum optimizer and SGD}{10}{subsection.3.2}
+\contentsline {section}{\numberline {4}Final model and analysis}{12}{section.4}
+\contentsline {section}{\numberline {5}Source codes}{14}{section.5}

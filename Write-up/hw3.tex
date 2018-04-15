@@ -126,7 +126,7 @@ A more detailed discussion of finally chosen model is provided in the section \r
 
 \section{Adjust hyper-parameters: stage I}
 \label{stage1}
-In this section we first adjust several hyper-parameters listed in the requirement 2. Hyper-parameters are determined by the validation accuracy (or loss) and the time efficiency
+In this section we first adjust several hyper-parameters listed in the requirement 2. Hyper-parameters are determined by the validation accuracy (or loss) and the time efficiency.
 
 
 \subsection{Size of the filters}
@@ -244,13 +244,57 @@ There are several choices of learning rate from {\tt 1E-5, 1E-4, 1E-3, 1E-2, 1E-
 
 
 
-
+\clearpage
 \subsection{The ways of paddings}
-So far there are two types of padding methods, i.e., {\tt same} (base model) and {\tt valid}. Here we compared the difference between {\tt same} and {\tt valid}.
-(To be finished by Yifei)
+So far there are two types of padding methods, i.e., {\tt same} (base model) and {\tt valid}. Here we compared the difference between {\tt same} and {\tt valid}. The accuracy is presented in Figure \ref{fig:padding}. It is obvious that using {\tt same} padding always gives the better accuracy in this test case. The loss of training is presented in Figure. \ref{fig:padding_loss} and shows that the loss of training data decreases much faster when using {\tt same} padding. It can be inferred that {\tt same} padding gives the best result and is the final hyper-parameter we chose.
+
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=8cm]{images/padding_accuracy.png} % requires the graphicx package
+   \caption{The figure shows the accuracy of validation data of {\tt same} (blue) and {\tt valid} (magenta) padding. }
+   \label{fig:padding}
+\end{figure}
+
+
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=8cm]{images/padding_loss.png} % requires the graphicx package
+   \caption{The figure shows the loss training data of {\tt same} (orange) and {\tt valid} (cyan) padding. }
+   \label{fig:padding_loss}
+\end{figure}
+
+
+
+\clearpage
 
 \subsection{The choices of activation functions}
 (To be finished by Yifei)
+The training loss is shown in Figure \ref{fig:af_loss} while the validation accuracy is shown in Figure \ref{fig:af_accuracy}. Obviously Sigmoid activation function does not learn much in this test case. As a result we chose {\tt ReLu} as our final hyper-parameter.
+
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=8cm]{images/af_accuracy.png} % requires the graphicx package
+   \caption{The figure shows the accuracy of validation data of {\tt ReLu} (blue) activation function and {\tt Sigmoid} (magenta) activation function. }
+   \label{fig:af_accuracy}
+\end{figure}
+
+
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=8cm]{images/af_loss.png} % requires the graphicx package
+   \caption{The figure shows the loss training data of {\tt ReLu} (orange) and {\tt Sigmoid} (cyan) activation function. }
+   \label{fig:af_loss}
+\end{figure}
+
+
+
+
+
+
 
 
 
