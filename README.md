@@ -17,35 +17,36 @@ Try different structures of the conv-net and compare the performance with each o
    
          `for learning_rate in [1E-3, 1E-4, 1E-5]:`
          
-         *use 1E-1*
+         use 1E-1
          
          
    - [x] size of the filters
    
-         *Filter number:5x5 *
+         Filter number:5x5 
    
-   - [ ] number of filters
+   - [x] number of filters
    
          first layer 32, second layer 64
    
-   - [ ] number of conv layers
+   - [x] number of conv layers
    
          `for use_two_conv in [True, False]:`
-         2
+         
+         2 
    
-   - [ ] number of pooling layers
+   - [x] number of pooling layers
    
-   2
-   
-   
-   - [ ] the ways of paddings
-   
-   "same"
-   
-   - [ ] the choices of activation functions
+          2
    
    
-   RELU
+   - [x] the ways of paddings
+   
+         "same"
+   
+   - [x] the choices of activation functions
+   
+   
+         RELU
    
    
    Construct a hyperparameter string for each one (example: "lr_1E-3,fc=2,conv=2")
@@ -61,8 +62,8 @@ Try different structures of the conv-net and compare the performance with each o
 
 [Understand the mathematical mechanisms](https://www.tensorflow.org/api_guides/python/train#Optimizers) and  observe the convergence rate compared to steepest gradient descent.
 
-   - [ ] momentum optimizer
-   - [ ] adam optimizer
+   - [x] momentum optimizer
+   - [x] adam optimizer
 
 ## Tensorboard:
  Add tensorboard part to your model. Tensorboard is a powerful tool, which helps you monitor how your training process goes on. It is a good way to visualize your model (computation graph you generated with tensorflow) and help you tune a good combination of hyper-parameters. You can even visualize how the weights of your model change with respect to training epochs. Read the [tutorial](https://www.tensorflow.org/programmers_guide/summaries_and_tensorboard) and watch the great video on this page for more information on adding tensorboard to your code.
