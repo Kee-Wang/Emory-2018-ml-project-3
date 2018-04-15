@@ -219,7 +219,7 @@ The behavior of two different CNN structures are shown in Figure \ref{fig:struct
 \begin{figure}[!htb]
    \centering
    \includegraphics[width=16cm]{images/graph-conv2-pool2.png} % requires the graphicx package
-   \caption{Graph for 2 convolutional layers and 2 pooling layer.Zoom in to see details.}
+   \caption{Graph for 2 convolutional layers and 2 pooling layer. Zoom in to see details.}
    \label{fig:2-c-2-p}
 \end{figure}
 
@@ -274,7 +274,11 @@ So far there are two types of padding methods, i.e., {\tt same} (base model) and
 \clearpage
 
 \subsection{The choices of activation functions}
-(To be finished by Yifei)
+The formula of sigmoid function is:
+$$Y = \frac{1}{1+e^{-X}}.$$
+
+Sigmoid function is one of the most widely used activation functions today. The reason why sigmoid does not have a good result in this case should be ``vanishing gradients''. Towards either end of the sigmoid function, the $Y$ values tend to respond very less to changes in $X$, meaning the gradient at that region is going to be small. It gives rise to a problem of ``vanishing gradients'', which means gradient cannot make significant change because of the extremely small value. The network refuses to learn further or is drastically slow.
+
 The training loss is shown in Figure \ref{fig:af_loss} while the validation accuracy is shown in Figure \ref{fig:af_accuracy}. Obviously Sigmoid activation function does not learn much in this test case. As a result we chose {\tt ReLu} as our final hyper-parameter.
 
 
