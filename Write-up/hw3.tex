@@ -28,6 +28,8 @@
 
 \usepackage{listings}
 
+
+
 % Python style for highlighting
 \newcommand\pythonstyle{\lstset{
 language=Python,
@@ -110,25 +112,25 @@ showstringspaces=false            %
 \clearpage
 
 
-\section{Introduction}
-Convolutional neural network (CNN) proves to be one of the most successful training models. This time we will use CNN to train MNIST data. MNIST is a database of handwritten figures in black and white. It contains 55000 training images and 10000 test images. In this report, we split 55000 training data into 80\% data for training and 20\% for validation. We first construct a base model and then 
+\section{Introduction and methods}
+Convolutional neural network (CNN) proves to be one of the most successful training models. This time we will use CNN to train MNIST data which is a database of handwritten figures in black and white. It contains 55000 training images and 10000 testing images. In this report, we will split 55000 training data into 80\% data for training and 20\% for validation. All data are trained in 5000 steps. Validation data accuracy and loss were monitor in every 500 steps. Gradient were calculated in batch size 200.
 
-After adjusted some hyper-parameters, we are going to choose the parameters that gives the best validation accuracy and lowest loss. 
 
-Then adjustment of hyper-parameters contains two stages. We first construct a base model with certain hyper-parameter.
+We constructed a base model and then adjust  hyper-parameters in two stages. 
+
+First, in section \ref{stage1}, we tune the size and number of the filters, number of convolution and polling layers, learning rate, the ways of paddings and the choices of activations functions. After choosing the optimized hyper-parameters, we finally the behavior of three different optimizers in section \ref{stage2}. 
+
+A more detailed discussion of finally chosen model is provided in the section \ref{summary}. At the end of the report, code of base model is provided.
 
 
 
 \section{Adjust hyper-parameters: stage I}
+\label{stage1}
 In this section we first adjust several hyper-parameters listed in the requirement 2.
 
 
 \subsection{Size of the filters}
-In basis model, size of filters is 5-by-5. According to Stanford University video courses lecture 5, common settings of filter size are listed in the Table \ref{tab:fsp}.
-
-
-
-
+In base model, the size of filter is 5-by-5. According to Stanford University video courses lecture 5, common settings of filter size are listed in the Table \ref{tab:fsp}.
 
 
 \begin{table}[!htb]
@@ -147,30 +149,29 @@ F	&S	&P		 \\ \hline
 \end{tabular}
 \end{table}
 
-Here we tried three different cases of filter's size: 1*1, 3*3 and 5*5. The plot of accuracy showed in Tensorboard is listed below:
+Here we tried three different cases of filter's size: $1\times1$, $3\times3$ and $5\times5$. 
 
-Now we know that the final accuracy after 5000 steps are shown in Table \ref{tab:filter}.
+Now we know that the final accuracy after 5000 steps are shown in Table \ref{tab:filter}. From the table we can obtain that $5\times5$ is the best size.
 
 \begin{table}[!htb]
 \centering
-\caption{Accuracy of 5000 steps }
+\caption{Validation accuracy at 5000 steps }
 \label{tab:filter}
 \begin{tabular}{C{5cm} C{2cm} C{2cm} C{2cm}}
 \hline \hline
 
-Size of filters	&1-by-1	&3-by-3	&5-by-5		 \\ \hline  
+Size of filters	&$1\times1$	&$3\times3$	&$5\times5$		 \\ \hline  
 Accuracy	&0.7676	&0.9133	&0.9252 \\ \hline \hline
 
 \end{tabular}
 \end{table}
 
+
+
 \subsection{Number of filters}
-In basis model, filter number is 32 for conv 1 and 64 for conv 2. According to Stanford University video courses lecture 5, common settings of filter number are power of 2: 32, 64, 128 and 512, etc.
-Here we tried four different cases of filter?s number (conv1, conv2): (32,32), (32,64), (64,64) and (128,128). The plot of accuracy showed in tensorboard is listed below:
-\\
-(pictures)
-\\
-Now we know that the final accuracy after 5000 steps are shown in Table  \ref{tab:num-filter}.
+In base model, filter number is 32 for conv 1 and 64 for conv 2. According to Stanford University video courses lecture 5, common settings of filter number are power of 2: 32, 64, 128 and 512, etc.
+
+Here we tried four different combinations of number of filters (conv1, conv2): (32, 32), (32, 64), (64, 64) and (128, 128). Now we know that the final validation accuracy at 5000 steps are shown in Table  \ref{tab:num-filter}.
 
 \begin{table}[!htb]
 \centering
@@ -179,40 +180,163 @@ Now we know that the final accuracy after 5000 steps are shown in Table  \ref{ta
 \begin{tabular}{C{6cm} C{2cm} C{2cm} C{2cm} C{2cm}}
 \hline \hline
 
-Number of filter (conv1, conv2)	&(32,32)	&(32,64)	&(64,64)	&(128,128)		 \\ \hline
-Accuracy at 500 step  	&0.3860	&0.4485	&0.6018	&0.4367 \\
-Accuracy at 5000 step	&0.9221	&0.9133	&0.9268	&0.9253 \\ \hline \hline
+Number of filter (conv1, conv2)	&(32, 32)	&(32, 64)	&(64, 64)	&(128, 128)		 \\ \hline
+Accuracy at 1000 step  	&0.5977	&0.7482	&0.7333	&0.7294 \\
+Accuracy at 5000 step	&0.9221	&0.9275	&0.9268	&0.9265 \\ \hline \hline
 \end{tabular}
 \end{table}
 
 
-From the table, the accuracy increases little with number, the final accuracies are very close. However, from the accuracy plots, we ca see that the initial accuracies at 500 steps have large differences:
+From the table, the accuracy increases little with number, the final accuracies are very close. However, from the accuracy plots, we ca see that the initial accuracies at 1000 steps have large differences. In according to the loss trending shown Figure \ref{fig:filter_number}, all four models shows similar loss descending curves with filter (32, 64) the steepest. It also should be noted filter size greater than (32, 64) takes a lot more time to finish the training but only gives marginal accuracy improvement. As a result, it is easy to conclude that filter (32, 64) is the best choice. 
+
 \begin{figure}[!htb]
    \centering
-   \includegraphics[width=16cm]{images/test.png} % requires the graphicx package
-   \caption{example caption}
-   \label{fig:example}
+   \includegraphics[width=10cm]{images/filter_number.png} % requires the graphicx package
+   \caption{The figure shows the trend of loss function behavior of different filters. The steepest curve at bottom belongs to filter (32, 64). See tensorboard event file for detailed legend.}
+   \label{fig:filter_number}
 \end{figure}
 
 
-
+\clearpage
 \subsection{Number of convolution and pooling layers}
+This is somewhat harder to tune. Generally, we have one pooling layer after a convolutional layer, and the dimension is cut into half. Begin with single image size $28\times 28$, it is easy to see we can apply at most 2 pooling layers if we are using {\tt same} padding. As a result, we only choose 1 convolutional layer plus 1 pooling layers (structure shown in Figure \ref{fig:1-c-1-p}) and 2 convolutional layers plus 2 pooling layers (base model,  structure shown in Figure \ref{fig:2-c-2-p}) ) to compare.
 
-The structure of base model contains 2 convolutional layers and 2 pooling layers, shown in Figure \ref{fig:2-c-2-p}.
+The behavior of two different CNN structures are shown in Figure \ref{fig:structure}. At 5000 step, the base model have a lower loss. As a result, we choose 2 convolutional layers plus 2 pooling layers as the final structure.
+
 
 \begin{figure}[!htb]
    \centering
-   \includegraphics[width=16cm]{images/graph.png} % requires the graphicx package
-   \caption{Zoom in to see details.}
+   \includegraphics[width=16cm]{images/graph-conv1-pool1.png} % requires the graphicx package
+   \caption{Graph for 1 convolutional layer and 1 pooling layer. Zoom in to see details.}
+   \label{fig:1-c-1-p}
+\end{figure}
+
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=16cm]{images/graph-conv2-pool2.png} % requires the graphicx package
+   \caption{Graph for 2 convolutional layers and 2 pooling layer.Zoom in to see details.}
    \label{fig:2-c-2-p}
 \end{figure}
 
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=10cm]{images/structure.png} % requires the graphicx package
+   \caption{The comparison of loss of two different CNN structures. Red curve, with final loss 0.3203, correspond to 1 convolutional layer and 1 pooling layer. Blue curve, with final loss 0.2567, correspond to 2 convolutional layers and 2 pooling layers.}
+   \label{fig:structure}
+\end{figure}
 
+\clearpage
+
+\subsection{Learning rate}
+There are several choices of learning rate from {\tt 1E-5, 1E-4, 1E-3, 1E-2, 1E-1} to {\tt 1}. It seems the best learning rate is {\tt 1E-1} as it converges to a very high accuracy (low loss) very fast. The Figure \ref{fig:lr} shows the trend of learning rate. The loss of curve steadily decrease faster as we increase learning rate from {\tt 1E-5} to {\tt 1E-1}. However, when learning rate equals to {\tt 1}, the loss function remains around 2.25 and does not decrease. As a result, learning rate at {\tt 1E-1} is the the best learning rate we choose.
+
+
+
+
+\begin{figure}[!htb]
+   \centering
+   \includegraphics[width=10cm]{images/learning_rate.png} % requires the graphicx package
+   \caption{Loss function of validation data. The detailed assignment of curves is shown in the event file and can be viewed in Tensorboard. The curve that descent the fastest correspond to learning rate equals to {\tt 1E-1}.}
+   \label{fig:lr}
+\end{figure}
+
+
+
+
+
+\subsection{The ways of paddings}
+So far there are two types of padding methods, i.e., {\tt same} (base model) and {\tt valid}. Here we compared the difference between {\tt same} and {\tt valid}.
+(To be finished by Yifei)
+
+\subsection{The choices of activation functions}
+(To be finished by Yifei)
 
 
 
 \clearpage
-\section{Finally model and summary}
+\section{Adjust hyper-parameters: stage II}
+\label{stage2}
+In this chapter, we use the hyper-parameters optimzied in section \ref{stage1} and adjust the optimizer. There are three choices of optimizers: {\tt Gradient Descent} (base model), {\tt Adam Optimizer} and {\tt Momentum Optimizer}. We will explain more about later two optimizers.
+
+\subsection{Momentum optimizer}
+Steepest gradient descent (SGD) has trouble navigating ravines, i.e. areas where the surface curves much more steeply in one dimension than in another, which are common around local optima. Momentum is a method that helps accelerate SGD in the relevant direction and dampens oscillations. 
+
+Here we set the parameters of MomentumOptimizer as: 
+
+\begin{lstlisting}
+optimizer = tf.train.MomentumOptimizer(learning_rate=1E-1, momentum=0.9)
+\end{lstlisting}
+
+
+The plot of training loss is showed as Figure
+(plot)
+We can then get the convergence rate = 
+
+
+\subsection{Adam optimizer}
+Adaptive Moment Estimation (Adam) is a method that computes adaptive learning rates for each parameter. In addition to storing an exponentially decaying average of past squared gradients, Adam also keeps an exponentially decaying average of past gradients, similar to momentum.
+Here we set the parameters of AdamOptimizer as: 
+
+\begin{lstlisting}
+optimizer = tf.train.AdamOptimizer(learning_rate=1E-1)
+\end{lstlisting}
+
+
+The plot of training loss is showed as Figure
+(plot)
+We can then get the convergence rate = 
+
+
+The training loss plot of SGD is showed as Figure 
+(plot)
+We can then get the convergence rate = 
+
+Compare these three convergence rates, we have the conclusion that, xxx optimizer suits best for these model.
+
+
+
+
+
+Results are compared in...
+(Needs table or figure)
+
+
+\clearpage
+
+\section{Final model and analysis}
+\label{summary}
+
+Based on previous experiments, the final model contins the following hyper-parameters:
+
+\begin{enumerate}
+\item
+{\tt learning\_rate = 1E-5} 
+
+\item
+Size of filter:  $5\times5$
+
+\item
+Number of filters: 32 for first layer and 64 for second layer
+
+\item
+Number of convolutional and pooling layers: 2
+
+\item
+The ways of paddings: {\tt same}
+
+\item
+The choice of activation function: {\tt ReLu}
+
+\item
+Optimizer: {\tt Gradient Descent}
+
+(Needs data and analysis of final model).
+
+
+
+\end{enumerate}
+
 
 
 
@@ -223,7 +347,7 @@ The structure of base model contains 2 convolutional layers and 2 pooling layers
 
 Finally, codes are enclosed here.
 
-\pythonexternal{./../project3.py}
+\pythonexternal{./../base_model.py}
 
 
 
